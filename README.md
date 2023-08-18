@@ -9,8 +9,9 @@
 
 ## **Prerequisites**
 
-This setup guide is tailored for a Linux environment (Oracle Linux 8).
+This setup guide is tailored for a Linux environment (Oracle Linux 8) under the user named "eric".
 Ensure you have root privileges on your system.
+
 
 ## **Elasticsearch Setup** 
 1. Create a folder named ELK in the /opt/ directory.
@@ -27,18 +28,18 @@ Ensure you have root privileges on your system.
     ```
 3. Change ownership and permissions of the Elasticsearch files
     ```
-    sudo chown -R finexus:finexus /opt/ELK/elasticsearch
+    sudo chown -R eric:eric /opt/ELK/elasticsearch
     sudo chmod o+x /opt/ELK/elasticsearch
-    sudo chgrp finexus /opt/ELK/elasticsearch
+    sudo chgrp eric /opt/ELK/elasticsearch
     ```
 4. Open the elasticsearch.yml configuration file and add "xpack.security.enabled: false" to the bottom of the file:
     ```
     /opt/ELK/elasticsearch/config/elasticsearch.yml
     xpack.security.enabled: false
     ```
-5. Switch user back to 'finexus' user and start Elasticsearch
+5. Switch user back to 'eric' user and start Elasticsearch
     ```
-    su - finexus
+    su - eric
     cd /opt/ELK/elasticsearch
     ./bin/elasticsearch
     ```
@@ -63,18 +64,18 @@ Ensure you have root privileges on your system.
     ```
 2. Change ownership and permissions of the Kibana files
     ```
-    sudo chown -R finexus:finexus /opt/ELK/kibana
+    sudo chown -R eric:eric /opt/ELK/kibana
     sudo chmod o+x /opt/ELK/kibana
-    sudo chgrp finexus /opt/ELK/kibana
+    sudo chgrp eric /opt/ELK/kibana
     ```
 3. Open and edit kibana.yml by changing "server.host: "localhost" " to "server.host: "0.0.0.0" " 
     ```
     /opt/ELK/kibana/config/kibana.yml
     server.host: "0.0.0.0" 
     ```
-4. Switch user back to 'finexus' user and run Kibana
+4. Switch user back to 'eric' user and run Kibana
     ```
-    su - finexus
+    su - eric
     cd /opt/ELK/kibana
     ./bin/kibana
     ```
@@ -115,9 +116,9 @@ Ensure you have root privileges on your system.
     ```
 6. Change ownership and permissions of the Logstash files
     ```
-    sudo chown -R finexus:finexus /opt/ELK/logstash
+    sudo chown -R eric:eric /opt/ELK/logstash
     sudo chmod o+x /opt/ELK/logstash
-    sudo chgrp finexus /opt/ELK/logstash
+    sudo chgrp eric /opt/ELK/logstash
     ```
 7. Create a logstash.conf file and place it in "/opt/ELK/logstash/logstash.conf". Make sure to include the required input, filter, and output configurations. *(Note: everytime a different file is to be ingested by logstash, the logstash.conf file must be changed according to the fields of the file)* Here's an example of logstash.conf:
     ```
@@ -144,9 +145,9 @@ Ensure you have root privileges on your system.
     stdout {codec => json_lines }
     }
     ```
-8. Switch user back to 'finexus' user and run Logstash
+8. Switch user back to 'eric' user and run Logstash
     ```
-    su - finexus
+    su - eric
     cd /opt/ELK/logstash/
     sudo bin/logstash -f /opt/ELK/logstash/logstash.conf
     (Make sure to replace /opt/ELK/logstash/logstash.conf with the path to your Logstash configuration file)
@@ -199,8 +200,8 @@ Default password: changeme
 
     [Service]
     Type=simple
-    User=finexus
-    Group=finexus
+    User=eric
+    Group=eric
     WorkingDirectory=/opt/ELK/elasticsearch
     ExecStart=/opt/ELK/elasticsearch/bin/elasticsearch
 
@@ -219,8 +220,8 @@ Default password: changeme
 
     [Service]
     Type=simple
-    User=finexus
-    Group=finexus
+    User=eric
+    Group=eric
     WorkingDirectory=/opt/ELK/kibana
     ExecStart=/opt/ELK/kibana/bin/kibana
 
@@ -239,8 +240,8 @@ Default password: changeme
 
     [Service]
     Type=simple
-    User=finexus
-    Group=finexus
+    User=eric
+    Group=eric
     WorkingDirectory=/opt/ELK/logstash
     ExecStart=/opt/ELK/logstash/bin/logstash -f /opt/ELK/logstash/aiv_access.conf
 
@@ -259,8 +260,8 @@ Default password: changeme
 
     [Service]
     Type=simple
-    User=finexus
-    Group=finexus
+    User=eric
+    Group=eric
     WorkingDirectory=/opt/ELK/logstash2
     ExecStart=/opt/ELK/logstash/bin/logstash -f /opt/ELK/logstash2/aiv_error.conf
 
@@ -279,8 +280,8 @@ Default password: changeme
 
     [Service]
     Type=simple
-    User=finexus
-    Group=finexus
+    User=eric
+    Group=eric
     WorkingDirectory=/opt/ELK/logstash3
     ExecStart=/opt/ELK/logstash/bin/logstash -f /opt/ELK/logstash3/Stomp.conf
 
