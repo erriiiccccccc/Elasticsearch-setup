@@ -4,6 +4,8 @@
   <b><small>"ELK" refers to three open-source projects that work together to provide a powerful log management and analytics solution: <b><small>
 </p>
 
+![Kibana visualizer](https://github.com/erriiiccccccc/Elasticsearch-setup/assets/90021527/b7acc8f8-9435-40c7-b65e-106aefa646d3)
+
 1. Elasticsearch: A search and analytics engine.
 2. Logstash: A server-side data processing pipeline that ingests data from various sources, transforms it, and sends it to Elasticsearch. 
 3. Kibana: A data visualization tool that allows users to explore, analyze, and visualize data stored in Elasticsearch.
