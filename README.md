@@ -6,6 +6,16 @@
 2. Logstash: A server-side data processing pipeline that ingests data from various sources, transforms it, and sends it to Elasticsearch.
 3. Kibana: A data visualization tool that allows users to explore, analyze, and visualize data stored in Elasticsearch.
 
+## Table of Contents ##
+1. Prerequisites
+2. Elasticsearch Setup
+3. Kibana Setup
+4. Logstash Setup
+5. Elasticsearch security setup
+6. Systemctl services setup to start EKL on startup
+7. Embedding Kibana graphs into a JSP page
+8. Setting up Anonymous User
+9. Plugin for creating and storing snapshots of your data
 
 ## **Prerequisites**
 
