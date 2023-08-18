@@ -426,7 +426,7 @@ Default password: changeme
     ```
 
 
-## Setting up Anonymous User to Embed Kibana Dashboard to Your 
+## Setting up Anonymous User to Embed Kibana Dashboard to Your Kibana
 
 ### This is used to set permissions so that anonymous users/clients can only access content that are intended
 1. Create encryption keys for your Kibana:

@@ -1,0 +1,16 @@
+<configuration scan="true" scanPeriod="10 seconds" debug="true" packagingData="true">
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.home}/logs/uksl.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${catalina.home}/logs/ukslLog.-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+      		<maxFileSize>100MB</maxFileSize>
+      		<maxHistory>1000</maxHistory>
+        </rollingPolicy>
+		<encoder>
+			<pattern>%X %date %level [%thread] %logger{10} [%line]- %msg%n</pattern>
+		</encoder>
+	</appender>
+	<root level="trace">
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>
