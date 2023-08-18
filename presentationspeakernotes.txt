@@ -1,0 +1,163 @@
+Speaker notes:
+
+slide 1:
+
+Elasticsearch is a highly scalable and distributed search and analytics engine that efficiently handles large volumes of structured and unstructured data. It provides fast search capabilities, real-time analytics, and the ability to scale as your data grows.
+
+Kibana is a user-friendly data visualization and exploration tool that allows users to interact with Elasticsearch data. It offers a user-friendly interface for creating visualizations, dashboards, and performing necessary searches on the data.
+
+Logstash is a server-side data processing pipeline that ingests data from various sources, transforms it, and sends it to Elasticsearch for indexing. It supports a wide range of input sources, including logs, databases, and message queues, making it a versatile tool for data ingestion and transformation in the ELK stack.
+
+
+########### DEMO #################
+
+slide 4:
+Grok is a powerful pattern matching tool used to extract structured information from unstructured log data. In our case, this will be our main way to transform our log files into fields of data
+
+Here is an example that shows how GROK works
+
+so / is used as a delimiter to separate different pattern components or regular expressions
+% followed  by {} is used to define capture groups within the pattern
+then like the "client" u see there is a literal text that acts like a seperator 
+
+
+
+
+
+slide 2:
+
+One of the significant advantages of the ELK stack is the ability to centralize logs from multiple places, this means we can view all the logs we want in a single location. This makes our log analysis alot more efficient
+
+Basically, kibana gives us the freedom to choose how we want to see our log data, by creating charts, graphs, or even maps. This can help us easily understand trends and patterns.
+
+For scalability, the ELK stack is highly scalable, which benefits us because it can handle growing log volumes. This helps us ensure efficient log management even as our data grows
+
+The ELK stack is open source, which means we can use it for free. It's also backed by a very supportive community of developers and users. On the elastic web page, there is countless free tutorial videos, notes and many more that can help beginners. They also have their own forum which users can use to ask questions.They even hv opsGPT, a chatgpt but tailored for ELK use
+
+One key group that benefits from the ELK stack is our clients or end-users. With the centralized log viewing and search capabilities provided by the ELK stack, clients can quickly identify and troubleshoot issues, leading to faster resolution times and enhanced user experiences.
+
+Developers also can benefit greately frm this. They can leverage the ELK stack to debug and monitor their applications, track errors, and gain insights into performance issues.
+
+slide 3:
+
+so by default, the ELK stack dont really have many built in security features, which could be an important aspect in production. However, they do provide security features if we set them up ourselves, it is quite complicated but it is definately doable like what was demo'ed jsut now
+
+We need the entire ELK stack to be running when we need it which could take up alot of memory. Also processing and analyzing vast amounts of log data will require substantial storage, memory and proecssing power
+
+so in the past there has been occasional instabilty reports. However it is important to note that the developers are usually quick to address the issues. Staying up to date with the latest releases can help avoid potential issues
+
+
+
+
+## **Cronjob setup to automate EKL**
+1. If you have more than 1 logstash.conf file that you would need to run at the same time, you will need to run multiple logstash instances simultaneously, each with its own unique configuration:
+    1. Duplicate the original logstash folder into different names (in this case i need 3 different instances running simultaneously):
+        ```
+        /opt/ELK/logstash1/
+        /opt/ELK/logstash2/
+        /opt/ELK/logstash3/
+        ```
+    2. Create seperate configuration file (.conf) for each log file and put it in each logstash folder
+    3. Open /etc/logstash/logstash.yml
+    4. Add your file path to "path.data":
+        ```
+        path.data: /opt/ELK/logstash/bin/logstash
+        path.data: /opt/ELK/logstash2/bin/logstash
+        path.data: /opt/ELK/logstash3/bin/logstash  
+        ```
+2. Create/Edit your crontab by writing:
+    ```
+    crontab -e
+    ```
+3. This will open your default editor, hit 'i' key to enter insert mode to write commands to start the ELK stack, for example:
+    ```
+    @reboot /opt/ELK/elasticsearch/bin/elasticsearch
+    @reboot sleep 60 && /opt/ELK/kibana/bin/kibana
+    @reboot sleep 120 && /opt/ELK/logstash/bin/logstash -f /opt/ELK/logstash/aiv_access.conf
+    @reboot sleep 160 && /opt/ELK/logstash2/bin/logstash -f /opt/ELK/logstash2/aiv_error.conf
+    @reboot sleep 200 && /opt/ELK/logstash3/bin/logstash -f /opt/ELK/logstash3/Stomp.conf
+    ```
+    The "sleep" command is used to add a delay before running each command.
+4. Hit 'Esc' key to exit insert mode and enter ':wq' to write the file and quit the editor, these steps installs the crontab and makes it active immediately:
+    ```
+    crontab: installing new crontab
+    ```
+5. Check the list of entries by writing:
+    ```
+    crontab -l
+    ```
+6. If everything is set up correctly, restart your system. The crontab will execute the commands when the system starts up:
+    ```
+    sudo reboot
+    ```
+7. Use 'sudo tail -100f /var/log/cron' or open /var/log/cron/ to view the output generated by your crontab entry
+
+
+
+
+
+DEMO
+
+startup elastic, kibana
+
+/opt/ELK/elasticsearch/bin/elasticsearch
+/opt/ELK/kibana/bin/kibana
+
+open kibana
+
+curl --cacert $ES_HOME/config/certs/http_ca.crt -u elastic http://localhost:9200 
+
+192.168.83.99:5601
+
+show log files, show logstash config file and change name
+
+delete sincedb
+
+run logstash
+
+/opt/ELK/logstash/bin/logstash -f /opt/ELK/logstash/aiv_access.conf
+
+add stuff into the log file then show that it auto increases
+
+create data view
+
+then create the graph with correct fields
+
+access: vertical = response time
+	horizontal = url path
+
+then create embed link thing
+put it into jsp
+put it into tomcat
+
+go to localhost:8080/ELK/UI/index.jsp
+
+login as elastic
+show the potential problems:
+
+... can access
+
+go to ROLES and add the demo index
+
+add permission in ANON
+
+login as guest
+
+show what we can do with permissions of anon
+
+
+
+then redo with what u aredy have to show cron
+
+@reboot /opt/ELK/elasticsearch/bin/elasticsearch
+@reboot sleep 60 && /opt/ELK/kibana/bin/kibana
+@reboot sleep 120 && /opt/ELK/logstash/bin/logstash -f /opt/ELK/logstash/aiv_access.conf
+@reboot sleep 160 && /opt/ELK/logstash2/bin/logstash -f /opt/ELK/logstash2/aiv_error.conf
+@reboot sleep 200 && /opt/ELK/logstash3/bin/logstash -f /opt/ELK/logstash3/Stomp.conf
+
+reboot
+show secure.jsp
+
+then go to grok first, then pros and cons
+
+

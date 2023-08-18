@@ -1,0 +1,122 @@
+.\logstash-8.8.1\bin\logstash.bat -f logstash.conf 
+
+
+########### Countries logstash ####################################################################################
+
+input {
+   file {
+      path => "C:/Users/Eric/Documents/GitHub/ELK-example/countriesoftheworld.*csv"
+      start_position => "beginning"
+      sincedb_path => "NUL"
+   }
+}
+
+filter {
+   csv {
+      separator => ","
+      columns => ["Id", "Country", "Region", "Population", "Area (sq. mi.)", "Pop. Density (per sq. mi.)"]
+   } 
+   mutate {convert => ["Id", "integer"]}
+   mutate {convert => ["Population", "integer"]}
+   mutate {convert => ["Area (sq. mi.)", "integer"]}
+}
+
+output {
+   elasticsearch {
+      hosts => ["localhost:9200"]
+      index => "countriestesting"
+      user => "elastic"
+      password => "changeme"
+   }
+   stdout {codec => json_lines }
+}
+
+
+########### aiv error logstash ####################################################################################
+
+input {
+  file {
+    path => "C:/Users/Eric/Documents/GitHub/ELK-example/logs/aiv_error.log"
+    start_position => "beginning"
+    sincedb_path => "NUL"
+  }
+}
+
+filter {
+  grok {
+    match => { "message" => "\[%{DATA:timestamp}\] \[%{WORD:response}\] \[client %{IP:clientip}\] %{GREEDYDATA:errormeaning}" }
+  }
+}
+
+output {
+   elasticsearch {
+      hosts => ["localhost:9200"]
+      index => "aiv_error.logstash"
+      user => "elastic"
+      password => "changeme"
+   }
+   stdout {codec => rubydebug }
+}
+
+
+########### aiv access logstash ####################################################################################
+
+input {
+  file {
+    path => "C:/Users/Eric/Documents/GitHub/ELK-example/logs/aiv_access.log"
+    start_position => "beginning"
+    sincedb_path => "NUL"
+  }
+}
+
+filter {
+  grok {
+    match => { "message" => "%{NUMBER:respond_time} %{IP:IP} - - \[%{HTTPDATE:timestamp}\] \"%{WORD:request_method} %{URIPATH:url_path}(\?)?%{GREEDYDATA:URLquery}\" %{NUMBER:response_code} (%{NUMBER:response_size})?" }
+  }
+
+  mutate {
+    convert => { "respond_time" => "integer" }
+  }
+}
+
+output {
+   elasticsearch {
+      hosts => ["localhost:9200"]
+      index => "aiv_access.logstash"
+      user => "elastic"
+      password => "changeme"
+   }
+   stdout {codec => rubydebug }
+}
+
+
+
+########### Stomp.log logstash ####################################################################################
+
+input {
+  file {
+    path => "C:/Users/Eric/Documents/GitHub/ELK-example/logs/Stomp.log"
+    start_position => "beginning"
+    sincedb_path => "NUL"
+  }
+}
+
+filter {
+  grok {
+    match => { "message" => "\[%{LOGLEVEL}\]\[%{TIMESTAMP_ISO8601:timestamp}\].*Message sent to %{WORD:type}\.OUT\. Processing time: %{NUMBER:processing_time}\." }
+  }
+
+  mutate {
+    convert => { "processing_time" => "float" }
+  }
+}
+
+output {
+   elasticsearch {
+      hosts => ["localhost:9200"]
+      index => "stomp.logstash"
+      user => "elastic"
+      password => "changeme"
+   }
+   stdout { codec => rubydebug }
+}

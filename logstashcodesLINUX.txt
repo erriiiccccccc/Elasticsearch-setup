@@ -1,0 +1,92 @@
+
+########### aiv error logstash ####################################################################################
+
+input {
+  file {
+    path => "/opt/ELK/logs/aiv_error.log"
+    sincedb_path => "/opt/ELK/logstash/data/sincedb_aiv_error"
+    start_position => "beginning"
+  }
+}
+
+filter {
+  grok {
+    match => { "message" => "\[%{DATA:timestamp}\] \[%{WORD:response}\] \[client %{IP:clientip}\] %{GREEDYDATA:errormeaning}" }
+  }
+}
+
+output {
+   elasticsearch {
+      hosts => ["localhost:9200"]
+      index => "aiv_error.logstash.cron"
+      user => "elastic"
+      password => "changeme"
+   }
+   stdout {codec => rubydebug }
+}
+
+
+
+########### aiv access logstash ####################################################################################
+
+input {
+  file {
+    path => "/opt/ELK/logs/aiv_access.log"
+    sincedb_path => "/opt/ELK/logstash/data/sincedb_aiv_access"
+    start_position => "beginning"
+  }
+}
+
+filter {
+  grok {
+    match => { "message" => "%{NUMBER:respond_time} %{IP:IP} - - \[%{HTTPDATE:timestamp}\] \"%{WORD:request_method} %{URIPATH:url_path}(\?)?%{GREEDYDATA:URLquery}\" %{NUMBER:response_code} (%{NUMBER:response_size})?" }
+  }
+
+  mutate {
+    convert => { "respond_time" => "integer" }
+  }
+}
+
+output {
+   elasticsearch {
+      hosts => ["localhost:9200"]
+      index => "aiv_access.logstash.cron"
+      user => "elastic"
+      password => "changeme"
+   }
+   stdout {codec => rubydebug }
+}
+
+
+
+
+
+########### Stomp.log logstash ####################################################################################
+
+input {
+  file {
+    path => "/opt/ELK/logs/Stomp.log"
+    sincedb_path => "/opt/ELK/logstash/data/sincedb_Stomp"
+    start_position => "beginning"
+  }
+}
+
+filter {
+  grok {
+    match => { "message" => "\[%{LOGLEVEL}\]\[%{TIMESTAMP_ISO8601:timestamp}\].*Message sent to %{WORD:type}\.OUT\. Processing time: %{NUMBER:processing_time}\." }
+  }
+
+  mutate {
+    convert => { "processing_time" => "float" }
+  }
+}
+
+output {
+   elasticsearch {
+      hosts => ["localhost:9200"]
+      index => "stomp.logstash.cron"
+      user => "elastic"
+      password => "changeme"
+   }
+   stdout { codec => rubydebug }
+}
