@@ -1,6 +1,8 @@
-# **ELASTIC-LOGSTASH-KIBANA (ELK) Setup Guide**
+<h1 align="center">✨ ELASTIC-LOGSTASH-KIBANA (ELK) Setup Guide ✨</h1>
 
-***"ELK" refers to three open-source projects that work together to provide a powerful log management and analytics solution:***
+<p align="center">
+  <b><small>"ELK" refers to three open-source projects that work together to provide a powerful log management and analytics solution: </small></b>
+</p>
 
 1. Elasticsearch: A search and analytics engine.
 2. Logstash: A server-side data processing pipeline that ingests data from various sources, transforms it, and sends it to Elasticsearch.
